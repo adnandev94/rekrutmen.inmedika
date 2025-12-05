@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Inmedika</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .navbar .logo {
+            height: 50px;
+            width: auto;
+            background: white;
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: opacity 0.3s;
+        }
+
+        .btn-small:hover {
+            opacity: 0.8;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-toggle {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .video-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+        }
+
+        .video-preview video,
+        .video-preview iframe {
+            width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .help-box {
+            background: #e7f3ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .help-box strong {
+            color: #0066cc;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-box ol {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .help-box li {
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="img/logo.png" alt="logo" class="logo" onerror="this.style.display='none'">
+            <h1>Dashboard Admin - Inmedika</h1>
+        </div>
+        <div class="user-info">
+            <span>Halo, Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Form Input Soal -->
+        <div class="card">
+            <h2>📝 Input Soal Tes Video</h2>
+            <form id="soalForm" onsubmit="saveSoal(event)">
+                <div class="form-group">
+                    <label>Judul Soal *</label>
+                    <input type="text" id="judul" required placeholder="Contoh: Tes Wawancara Tahap 1">
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi Soal</label>
+                    <textarea id="deskripsi" placeholder="Jelaskan instruksi atau deskripsi soal"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>URL Video *</label>
+                    <input type="text" id="video_url" required placeholder="Paste link Google Drive di sini" onchange="previewVideo()">
+                    
+                    <div class="help-box">
+                        <strong>⚠️ PENTING - Cara Setting Google Drive agar video tidak buffering:</strong>
+                        <ol>
+                            <li>Upload video ke Google Drive</li>
+                            <li>Klik kanan video → <strong>"Bagikan" / "Share"</strong></li>
+                            <li>Ubah akses menjadi: <strong>"Siapa saja yang memiliki link dapat melihat"</strong></li>
+                            <li>Klik <strong>"Salin link" / "Copy link"</strong></li>
+                            <li>Paste link tersebut di kolom di atas</li>
+                        </ol>
+                        <strong style="color: #dc3545; margin-top: 0.5rem;">💡 Tips: Gunakan video dengan ukuran maksimal 500MB untuk performa terbaik</strong>
+                    </div>
+
+                    <div id="videoPreview" class="video-preview" style="display: none;">
+                        <div id="previewPlayer"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Durasi (menit) *</label>
+                        <input type="number" id="durasi" required min="1" placeholder="30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="status" required>
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Non-Aktif</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Waktu Mulai *</label>
+                        <input type="datetime-local" id="waktu_mulai" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Waktu Selesai *</label>
+                        <input type="datetime-local" id="waktu_selesai" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">💾 Simpan Soal</button>
+            </form>
+        </div>
+
+        <!-- Daftar Soal -->
+        <div class="card">
+            <h2>📋 Daftar Soal Tes</h2>
+            <div class="table-container">
+                <table id="soalTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Judul</th>
+                            <th>Durasi</th>
+                            <th>Waktu Mulai</th>
+                            <th>Waktu Selesai</th>
+                            <th>Status</th>
+                            <th>Peserta</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="soalTableBody">
+                        <!-- Data akan ditampilkan di sini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Daftar Peserta -->
+        <div class="card">
+            <h2>👥 Daftar Peserta Tes</h2>
+            <div class="table-container">
+                <table id="pesertaTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Telepon</th>
+                            <th>Posisi</th>
+                            <th>Soal Tes</th>
+                            <th>Tanggal Daftar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pesertaTableBody">
+                        <!-- Data akan ditampilkan di sini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cek apakah admin sudah login
+        window.onload = function() {
+            if (!sessionStorage.getItem('admin_logged_in')) {
+                alert('Anda harus login terlebih dahulu!');
+                window.location.href = 'index.html';
+                return;
+            }
+            loadSoalData();
+            loadPesertaData();
+        };
+
+        // Simulasi data storage
+        let soalData = JSON.parse(localStorage.getItem('soalData')) || [];
+
+        function previewVideo() {
+            const videoUrl = document.getElementById('video_url').value;
+            const preview = document.getElementById('videoPreview');
+            const player = document.getElementById('previewPlayer');
+
+            if (!videoUrl) {
+                preview.style.display = 'none';
+                return;
+            }
+
+            // Deteksi tipe video dan buat embed yang sesuai
+            const embedCode = getVideoEmbed(videoUrl);
+            
+            if (embedCode) {
+                player.innerHTML = embedCode;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+                alert('Format URL tidak didukung atau sharing belum diaktifkan.\n\nPastikan:\n1. Link sudah dishare dengan akses "Siapa saja yang memiliki link"\n2. Format link benar dari Google Drive, YouTube, atau Vimeo');
+            }
+        }
+
+        function getVideoEmbed(url) {
+            // YouTube
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const videoId = extractYouTubeId(url);
+                if (videoId) {
+                    return `<iframe width="100%" height="300" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
+                }
+            }
+            
+            // Google Drive - Format yang lebih baik untuk mencegah buffering
+            if (url.includes('drive.google.com')) {
+                const fileId = extractGoogleDriveId(url);
+                if (fileId) {
+                    return `
+                        <div class="alert alert-info">
+                            <strong>✅ Link Google Drive terdeteksi!</strong><br>
+                            File ID: ${fileId}<br>
+                            Pastikan file sudah di-share dengan akses "Siapa saja yang memiliki link"
+                        </div>
+                        <iframe 
+                            width="100%" 
+                            height="300" 
+                            src="https://drive.google.com/file/d/${fileId}/preview" 
+                            allow="autoplay"
+                            allowfullscreen>
+                        </iframe>
+                        <div style="margin-top: 0.5rem;">
+                            <a href="https://drive.google.com/file/d/${fileId}/view" target="_blank" style="color: #667eea; text-decoration: underline;">
+                                🔗 Buka di Google Drive untuk cek sharing
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Vimeo
+            if (url.includes('vimeo.com')) {
+                const videoId = extractVimeoId(url);
+                if (videoId) {
+                    return `<iframe width="100%" height="300" src="https://player.vimeo.com/video/${videoId}" allowfullscreen></iframe>`;
+                }
+            }
+            
+            // Direct video URL (mp4, webm, ogg)
+            if (url.match(/\.(mp4|webm|ogg)$/i)) {
+                return `<video width="100%" height="300" controls preload="metadata"><source src="${url}" type="video/mp4">Browser Anda tidak mendukung video.</video>`;
+            }
+            
+            return null;
+        }
+
+        function extractYouTubeId(url) {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/,
+                /youtube\.com\/embed\/([^&\s]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function extractGoogleDriveId(url) {
+            // Pola yang lebih lengkap untuk berbagai format Google Drive URL
+            const patterns = [
+                /\/file\/d\/([a-zA-Z0-9_-]+)/,
+                /id=([a-zA-Z0-9_-]+)/,
+                /\/d\/([a-zA-Z0-9_-]+)/,
+                /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function extractVimeoId(url) {
+            const match = url.match(/vimeo\.com\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        function saveSoal(event) {
+            event.preventDefault();
+
+            // Validasi URL video
+            const videoUrl = document.getElementById('video_url').value;
+            if (!getVideoEmbed(videoUrl)) {
+                alert('❌ Format URL tidak valid atau sharing belum diaktifkan!\n\nPastikan:\n1. Link sudah dishare dengan "Siapa saja yang memiliki link"\n2. Format link benar');
+                return;
+            }
+
+            const soal = {
+                id: Date.now(),
+                judul: document.getElementById('judul').value,
+                deskripsi: document.getElementById('deskripsi').value,
+                video_url: videoUrl,
+                durasi: document.getElementById('durasi').value,
+                waktu_mulai: document.getElementById('waktu_mulai').value,
+                waktu_selesai: document.getElementById('waktu_selesai').value,
+                status: document.getElementById('status').value,
+                created_at: new Date().toISOString()
+            };
+
+            soalData.push(soal);
+            localStorage.setItem('soalData', JSON.stringify(soalData));
+
+            alert('✅ Soal berhasil disimpan!');
+            document.getElementById('soalForm').reset();
+            document.getElementById('videoPreview').style.display = 'none';
+            loadSoalData();
+        }
+
+        function loadSoalData() {
+            const tbody = document.getElementById('soalTableBody');
+            tbody.innerHTML = '';
+
+            if (soalData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: #999;">Belum ada data soal</td></tr>';
+                return;
+            }
+
+            const pesertaData = JSON.parse(localStorage.getItem('pesertaData')) || [];
+
+            soalData.forEach((soal, index) => {
+                const jumlahPeserta = pesertaData.filter(p => p.soal_id === soal.id).length;
+                
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${soal.judul}</strong><br><small style="color: #666;">${soal.deskripsi || '-'}</small></td>
+                        <td>${soal.durasi} menit</td>
+                        <td>${formatDateTime(soal.waktu_mulai)}</td>
+                        <td>${formatDateTime(soal.waktu_selesai)}</td>
+                        <td><span class="badge ${soal.status === 'aktif' ? 'badge-active' : 'badge-inactive'}">${soal.status.toUpperCase()}</span></td>
+                        <td><strong>${jumlahPeserta}</strong> orang</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-toggle" onclick="toggleStatus(${soal.id})">Toggle</button>
+                                <button class="btn-small btn-edit" onclick="editSoal(${soal.id})">Edit</button>
+                                <button class="btn-small btn-delete" onclick="deleteSoal(${soal.id})">Hapus</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function loadPesertaData() {
+            const pesertaData = JSON.parse(localStorage.getItem('pesertaData')) || [];
+            const tbody = document.getElementById('pesertaTableBody');
+            tbody.innerHTML = '';
+
+            if (pesertaData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #999;">Belum ada peserta yang mendaftar</td></tr>';
+                return;
+            }
+
+            pesertaData.forEach((peserta, index) => {
+                const soal = soalData.find(s => s.id === peserta.soal_id);
+                const judulSoal = soal ? soal.judul : 'Soal tidak ditemukan';
+
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${peserta.nama}</strong></td>
+                        <td>${peserta.email}</td>
+                        <td>${peserta.telepon}</td>
+                        <td>${peserta.posisi}</td>
+                        <td>${judulSoal}</td>
+                        <td>${formatDateTime(peserta.tanggal_daftar)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function formatDateTime(datetime) {
+            const date = new Date(datetime);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function toggleStatus(id) {
+            const soal = soalData.find(s => s.id === id);
+            if (soal) {
+                soal.status = soal.status === 'aktif' ? 'nonaktif' : 'aktif';
+                localStorage.setItem('soalData', JSON.stringify(soalData));
+                loadSoalData();
+            }
+        }
+
+        function editSoal(id) {
+            const soal = soalData.find(s => s.id === id);
+            if (soal) {
+                document.getElementById('judul').value = soal.judul;
+                document.getElementById('deskripsi').value = soal.deskripsi;
+                document.getElementById('video_url').value = soal.video_url;
+                document.getElementById('durasi').value = soal.durasi;
+                document.getElementById('waktu_mulai').value = soal.waktu_mulai;
+                document.getElementById('waktu_selesai').value = soal.waktu_selesai;
+                document.getElementById('status').value = soal.status;
+                
+                previewVideo();
+                
+                // Hapus data lama
+                deleteSoal(id, false);
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function deleteSoal(id, confirm = true) {
+            if (confirm && !window.confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
+                return;
+            }
+
+            soalData = soalData.filter(s => s.id !== id);
+            localStorage.setItem('soalData', JSON.stringify(soalData));
+            loadSoalData();
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                sessionStorage.removeItem('admin_logged_in');
+                alert('Logout berhasil!');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekrutmen Inmedika</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('img/foto.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            z-index: -1;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .navbar .logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .navbar .navbar-content h1 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .navbar .navbar-content p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+        }
+
+        .hero-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .soal-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .soal-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .soal-item h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .soal-item p {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .soal-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-upcoming {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-closed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .video-container {
+            margin: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            height: 100%;
+            position: relative;
+        }
+
+        .video-container video,
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: none;
+        }
+
+        .video-blocker {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .navbar-left {
+                flex-direction: column;
+            }
+
+            .navbar-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .navbar-menu .btn {
+                width: 100%;
+            }
+
+            .hero-section h2 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="img/logo.png" alt="Logo Inmedika" class="logo">
+            <div class="navbar-content">
+                <h1>Rekrutmen Inmedika</h1>
+                <p>Sistem Rekrutmen Karyawan</p>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <button class="btn" onclick="openLoginModal()">🔐 Login Admin</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero-section">
+            <h2>Selamat Datang di Rekrutmen Inmedika</h2>
+            <p>Bergabunglah dengan tim kami dan kembangkan karir Anda di industri kesehatan</p>
+            
+            <div class="hero-buttons">
+                <button class="btn btn-large" onclick="openTestModal()">Mulai Tes Sekarang</button>
+            </div>
+
+       
+    <!-- Modal Tes Masuk -->
+    <div id="testModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Daftar Soal Tes</h3>
+                <button class="close-btn" onclick="closeTestModal()">×</button>
+            </div>
+            <div id="soalListContainer">
+                <!-- Daftar soal akan dimuat di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Soal Full Screen -->
+    <div id="detailSoalModal" class="modal">
+        <div class="modal-content" style="max-width: 95vw; max-height: 95vh; padding: 1rem;">
+            <div class="modal-header">
+                <h3>📝 <span id="judulSoal"></span></h3>
+                <button class="close-btn" onclick="closeDetailSoalModal()">×</button>
+            </div>
+            
+            <div id="detailSoalContent" style="height: calc(90vh - 100px);">
+                <!-- Detail soal akan dimuat di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login Admin -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔐 Login Administrator</h3>
+                <button class="close-btn" onclick="closeLoginModal()">×</button>
+            </div>
+            <form id="loginForm" onsubmit="submitLogin(event)">
+                <div class="form-group">
+                    <label>Username *</label>
+                    <input type="text" required placeholder="Masukkan username">
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" required placeholder="Masukkan password">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedSoalId = null;
+
+        function scrollToFeatures() {
+            document.querySelector('.features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openTestModal() {
+            loadAvailableSoal();
+            document.getElementById('testModal').classList.add('active');
+        }
+
+        function closeTestModal() {
+            document.getElementById('testModal').classList.remove('active');
+        }
+
+        function openDetailSoalModal(soalId) {
+            selectedSoalId = soalId;
+            const soalData = JSON.parse(localStorage.getItem('soalData')) || [];
+            const soal = soalData.find(s => s.id === soalId);
+
+            if (!soal) return;
+
+            const videoEmbed = getVideoEmbed(soal.video_url);
+
+            document.getElementById('judulSoal').textContent = soal.judul;
+
+            const detailContent = document.getElementById('detailSoalContent');
+            detailContent.innerHTML = `
+                ${soal.deskripsi ? `<p style="color: #666; margin-bottom: 1rem; text-align: center;">${soal.deskripsi}</p>` : ''}
+                
+                <div class="video-container" style="position: relative;">
+                    ${videoEmbed || '<p style="color: #999; padding: 2rem; text-align: center;">Video tidak dapat ditampilkan</p>'}
+                    <div class="video-blocker"></div>
+                </div>
+            `;
+
+            closeTestModal();
+            document.getElementById('detailSoalModal').classList.add('active');
+
+            setTimeout(() => {
+                const video = document.getElementById('mainVideo');
+                if (video) {
+                    video.play();
+
+                    video.addEventListener('pause', function(e) {
+                        if (video.currentTime < video.duration) {
+                            video.play();
+                        }
+                    });
+                    
+                    let lastTime = 0;
+                    video.addEventListener('timeupdate', function() {
+                        if (!video.seeking) {
+                            lastTime = video.currentTime;
+                        }
+                    });
+                    
+                    video.addEventListener('seeking', function() {
+                        const delta = video.currentTime - lastTime;
+                        if (Math.abs(delta) > 0.01) {
+                            video.currentTime = lastTime;
+                        }
+                    });
+
+                    video.addEventListener('keydown', function(e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                    video.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        video.play();
+                    });
+                }
+            }, 100);
+
+            setInterval(() => {
+                const video = document.getElementById('mainVideo');
+                if (video && video.paused && video.currentTime < video.duration) {
+                    video.play();
+                }
+            }, 500);
+        }
+
+        function getVideoEmbed(url) {
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const videoId = extractYouTubeId(url);
+                if (videoId) {
+                    return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="pointer-events: none;"></iframe>`;
+                }
+            }
+            
+            if (url.includes('drive.google.com')) {
+                const fileId = extractGoogleDriveId(url);
+                if (fileId) {
+                    return `<iframe id="driveVideo" width="100%" height="100%" src="https://drive.google.com/file/d/${fileId}/preview?autoplay=1" frameborder="0" allow="autoplay; fullscreen" style="pointer-events: none;"></iframe>`;
+                }
+            }
+            
+            if (url.includes('vimeo.com')) {
+                const videoId = extractVimeoId(url);
+                if (videoId) {
+                    return `<iframe width="100%" height="100%" src="https://player.vimeo.com/video/${videoId}?autoplay=1&controls=0&title=0&byline=0&portrait=0&playsinline=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="pointer-events: none;"></iframe>`;
+                }
+            }
+            
+            if (url.match(/\.(mp4|webm|ogg)$/i) || url.includes('.mp4') || url.includes('.webm')) {
+                return `<video id="mainVideo" width="100%" height="100%" autoplay loop muted playsinline disablePictureInPicture oncontextmenu="return false;" style="object-fit: contain;">
+                    <source src="${url}" type="video/mp4">
+                    Browser Anda tidak mendukung video.
+                </video>`;
+            }
+            
+            return '<p style="color: #e74c3c; padding: 2rem; background: #fee; border-radius: 8px; text-align: center;">❌ Format URL tidak didukung atau video tidak dapat diakses.</p>';
+        }
+
+        function extractYouTubeId(url) {
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/,
+                /youtube\.com\/embed\/([^&\s]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function extractGoogleDriveId(url) {
+            const patterns = [
+                /\/file\/d\/([^\/]+)/,
+                /id=([^&]+)/,
+                /\/d\/([^\/]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function extractVimeoId(url) {
+            const match = url.match(/vimeo\.com\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        function closeDetailSoalModal() {
+            document.getElementById('detailSoalModal').classList.remove('active');
+            selectedSoalId = null;
+        }
+
+        function loadAvailableSoal() {
+            const soalData = JSON.parse(localStorage.getItem('soalData')) || [];
+            const container = document.getElementById('soalListContainer');
+
+            const activeSoal = soalData.filter(s => s.status === 'aktif');
+
+            if (activeSoal.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 2rem;">Belum ada soal tes yang tersedia saat ini.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            activeSoal.forEach(soal => {
+                const now = new Date();
+                const mulai = new Date(soal.waktu_mulai);
+                const selesai = new Date(soal.waktu_selesai);
+
+                let status = '';
+                let statusClass = '';
+                let isClickable = false;
+
+                if (now < mulai) {
+                    status = 'Belum Dimulai';
+                    statusClass = 'status-upcoming';
+                } else if (now > selesai) {
+                    status = 'Sudah Ditutup';
+                    statusClass = 'status-closed';
+                } else {
+                    status = 'Tersedia';
+                    statusClass = 'status-available';
+                    isClickable = true;
+                }
+
+                const soalItem = document.createElement('div');
+                soalItem.className = 'soal-item';
+                if (isClickable) {
+                    soalItem.onclick = () => openDetailSoalModal(soal.id);
+                } else {
+                    soalItem.style.opacity = '0.6';
+                    soalItem.style.cursor = 'not-allowed';
+                }
+
+                soalItem.innerHTML = `
+                    <h4>${soal.judul}</h4>
+                    <p>${soal.deskripsi || 'Tidak ada deskripsi'}</p>
+                    <p><strong>⏱️ Durasi:</strong> ${soal.durasi} menit</p>
+                    <p><strong>📅 Mulai:</strong> ${formatDateTime(soal.waktu_mulai)}</p>
+                    <p><strong>📅 Selesai:</strong> ${formatDateTime(soal.waktu_selesai)}</p>
+                    <span class="soal-status ${statusClass}">${status}</span>
+                `;
+
+                container.appendChild(soalItem);
+            });
+        }
+
+        function formatDateTime(datetime) {
+            const date = new Date(datetime);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function submitLogin(e) {
+            e.preventDefault();
+            const username = e.target.elements[0].value;
+            const password = e.target.elements[1].value;
+            
+            if (username === 'admin' && password === 'admin123') {
+                sessionStorage.setItem('admin_logged_in', 'true');
+                sessionStorage.setItem('admin_username', username);
+                
+                alert('Login berhasil! Mengarahkan ke dashboard...');
+                
+                setTimeout(function() {
+                    window.location.href = 'dashboard.html';
+                }, 500);
+            } else {
+                alert('Username atau password salah!');
+            }
+        }
+
+        window.onclick = function(event) {
+            const testModal = document.getElementById('testModal');
+            const loginModal = document.getElementById('loginModal');
+            const detailModal = document.getElementById('detailSoalModal');
+            
+            if (event.target === testModal) {
+                closeTestModal();
+            }
+            if (event.target === loginModal) {
+                closeLoginModal();
+            }
+            if (event.target === detailModal) {
+                closeDetailSoalModal();
+            }
+        }
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('detailSoalModal').classList.contains('active')) {
+                if ([32, 37, 38, 39, 40, 75, 74, 77, 76].includes(e.keyCode)) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('contextmenu', function(e) {
+                if (e.target.tagName === 'VIDEO' || e.target.tagName === 'IFRAME') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
